@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-'''index range function'''
+'''
+index range function
+'''
 
 import csv
 import math
