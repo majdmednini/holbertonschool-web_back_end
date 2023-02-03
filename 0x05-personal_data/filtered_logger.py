@@ -2,11 +2,11 @@
 """
 Personal data
 """
-import os
-import re
 from typing import List
 import logging
+import re
 import mysql.connector
+import os
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -17,7 +17,8 @@ PERSONAL_DATA_DB_HOST = os.getenv("PERSONAL_DATA_DB_HOST")
 
 
 class RedactingFormatter(logging.Formatter):
-
+    """ formatter class
+    """
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
@@ -27,7 +28,9 @@ class RedactingFormatter(logging.Formatter):
         super(RedactingFormatter, self).__init__(self.FORMAT)
 
     def format(self, record: logging.LogRecord) -> str:
-  
+        """
+        log
+        """
         logging.basicConfig(format=self.FORMAT, level=logging.INFO)
         return (self.filter_datum(
             self.fields,
@@ -42,7 +45,9 @@ class RedactingFormatter(logging.Formatter):
                      message: str,
                      separator: str
                      ) -> str:
-
+        """
+        hides all the personal
+        """
         for field in fields:
             message = re.sub("{}=(.*?){}".format(field, separator),
                              field + "=" + redaction + separator,  message)
@@ -51,6 +56,9 @@ class RedactingFormatter(logging.Formatter):
 
 def get_logger() -> logging.Logger:
 
+    """
+        logging
+    """
     logger = logging.getLogger("user_data")
     stream_handler = logging.StreamHandler()
     logger.propagate = False
@@ -62,7 +70,9 @@ def get_logger() -> logging.Logger:
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
-
+    """
+        sql
+    """
     connection = mysql.connector.connect(
                                     user=PERSONAL_DATA_DB_USERNAME,
                                     password=PERSONAL_DATA_DB_PASSWORD,
@@ -73,6 +83,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 
 def main():
+    """
+        main
+    """
 
     connection = get_db()
     cursor = connection.cursor()
