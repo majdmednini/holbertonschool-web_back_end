@@ -1,14 +1,12 @@
-"""module
+"""DB module
 """
+from user import Base, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
-
-from user import Base, User
-
 
 class DB:
     """DB class
@@ -17,14 +15,14 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
 
     @property
-    def _session(self) -> Session:
-        """session object
+    def _session(self):
+        """Memoized session object
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
@@ -32,19 +30,52 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """new user
         """
-        user = User(email=email, hashed_password=hashed_password)
+            return a user object
+            and save the user to the database
+        """
+
+        user = User()
+        user.email = email
+        user.hashed_password = hashed_password
         self._session.add(user)
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> User:
-        """return the first row found
+    def find_user_by(self, **keyword) -> User:
         """
-        if kwargs is None:
-            raise InvalidRequestError
-        user = self._session.query(User).filter_by(**kwargs).first()
+        find user by a keyword arguments
+        and return the first row found in users
+        """
+        valid_keyword = ["id", "email", "session_id", "reset_token"]
+        keyword_keys = keyword.keys()
+        if not all(
+            keyword_keys in valid_keyword for keyword_keys in valid_keyword
+                ):
+            raise(InvalidRequestError)
+        user = self._session.query(User).filter_by(**keyword).first()
         if user is None:
-            raise NoResultFound
-        return 
+            raise(NoResultFound)
+        else:
+            return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+            look up for the user
+            using it's id, then update it's attributes
+            based on the kwargs passed in the method arguments
+            also commit changes to the database
+        """
+        valid_keyword = [
+            "id",
+            "email", "session_id", "reset_token", "hashed_password"]
+
+        user = self.find_user_by(id=user_id)
+        if user:
+            for k, v in kwargs.items():
+                if k in valid_keyword:
+                    setattr(user, k, v)
+                else:
+                    # print(k in valid_keyword)
+                    raise(ValueError)
+            self._session.commit()
