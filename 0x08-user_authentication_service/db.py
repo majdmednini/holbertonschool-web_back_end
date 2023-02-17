@@ -12,22 +12,27 @@ class DB:
     """DB class
     """
 
+
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=False)
+        self._engine = create_engine("sqlite:///a.db", echo = False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
 
     @property
+
+
     def _session(self):
         """Memoized session object
         """
         if self.__session is None:
-            DBSession = sessionmaker(bind=self._engine)
+            DBSession = sessionmaker(bind = self._engine)
             self.__session = DBSession()
         return self.__session
+  
+
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """
@@ -41,6 +46,8 @@ class DB:
         self._session.add(user)
         self._session.commit()
         return user
+
+
 
     def find_user_by(self, **keyword) -> User:
         """
@@ -59,6 +66,8 @@ class DB:
         else:
             return user
 
+
+
     def update_user(self, user_id: int, **kwargs) -> None:
         """
             look up for the user
@@ -70,7 +79,7 @@ class DB:
             "id",
             "email", "session_id", "reset_token", "hashed_password"]
 
-        user = self.find_user_by(id=user_id)
+        user = self.find_user_by(id = user_id)
         if user:
             for k, v in kwargs.items():
                 if k in valid_keyword:
