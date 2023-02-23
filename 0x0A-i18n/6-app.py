@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-""" 
-6. Use user locale
+""" Basic Flask app
 """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
@@ -10,7 +9,7 @@ babel = Babel(app)
 
 
 class Config(object):
-    """ config """
+    ''' babel config class '''
     LANGUAGES = ["en", "fr"]
 
 
@@ -28,7 +27,7 @@ users = {
 
 @babel.localeselector
 def get_locale():
-    """" locale from request """
+    ''' get locale from request '''
     locale = request.args.get("locale")
     if locale and locale in Config.LANGUAGES:
         return locale
@@ -46,7 +45,7 @@ def get_locale():
 
 
 def get_user():
-    """ return user from mocked db """
+    ''' returns user from mocked db '''
     login_as = request.args.get("login_as", False)
     if login_as:
         user = users.get(int(login_as), False)
@@ -57,14 +56,14 @@ def get_user():
 
 @app.before_request
 def before_request():
-    """ self descriptive """
+    ''' self descriptive '''
     user = get_user()
     g.user = user
 
 
 @app.route("/", methods=["GET"])
 def index():
-    """ return index """
+    """ Returns index """
     return render_template("6-index.html")
 
 
