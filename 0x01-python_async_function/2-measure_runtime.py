@@ -2,15 +2,18 @@
 """
 2. Measure the runtime
 """
-
 import asyncio
+import time
 
-wait_random = __import__('0-basic_async_syntax').wait_random
+wait_n = __import__('1-concurrent_coroutines').wait_n
 
 
-def task_wait_random(max_delay: int) -> asyncio.Task:
+def measure_time(n: int, max_delay: int) -> float:
     """
-    return task with asyncio
+   return a float
     """
-    task = asyncio.create_task(wait_random(max_delay))
-    return task
+    start_time = time.time()
+    asyncio.run(wait_n(n, max_delay))
+    total_time = time.time() - start_time
+    total_time /= n
+    return total_time
