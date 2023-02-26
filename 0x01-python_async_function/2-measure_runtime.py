@@ -2,6 +2,7 @@
 """
 2. Measure the runtime
 """
+
 import asyncio
 import time
 
@@ -12,8 +13,8 @@ def measure_time(n: int, max_delay: int) -> float:
     """
     returns a float
     """
-    start_time = time.time()
+    start_time = 0.0
+    total_time = time.perf_counter()
     asyncio.run(wait_n(n, max_delay))
-    total_time = time.time() - start_time
-    total_time /= n
-    return total_time
+    start_time = time.perf_counter() - total_time
+    return total_time / n
