@@ -1,11 +1,11 @@
 # 0x06. Basic authentication
-## General
+## Learning Objectives
 * What authentication means
 * What Base64 is
 * How to encode a string in Base64
 * What Basic authentication means
 * How to send the Authorization header
-## Python Scripts
+## Requirements
 * All your files will be interpreted/compiled on Ubuntu 18.04 LTS using python3 (version 3.7)
 * All your files should end with a new line
 * The first line of all your files should be exactly #!/usr/bin/env python3

@@ -45,7 +45,8 @@ class Base():
         return (self.id == other.id)
 
     def to_json(self, for_serialization: bool = False) -> dict:
-        """ Convert the object a JSON dictionary
+        """
+        convert the object a JSON
         """
         result = {}
         for key, value in self.__dict__.items():
@@ -59,7 +60,8 @@ class Base():
 
     @classmethod
     def load_from_file(cls):
-        """ Load all objects from file
+        """
+        load all objects
         """
         s_class = cls.__name__
         file_path = ".db_{}.json".format(s_class)
@@ -74,7 +76,8 @@ class Base():
 
     @classmethod
     def save_to_file(cls):
-        """ Save all objects to file
+        """
+        save all objects
         """
         s_class = cls.__name__
         file_path = ".db_{}.json".format(s_class)
@@ -86,7 +89,8 @@ class Base():
             json.dump(objs_json, f)
 
     def save(self):
-        """ Save current object
+        """
+        save current object
         """
         s_class = self.__class__.__name__
         self.updated_at = datetime.utcnow()
@@ -94,7 +98,8 @@ class Base():
         self.__class__.save_to_file()
 
     def remove(self):
-        """ Remove object
+        """
+        remove object
         """
         s_class = self.__class__.__name__
         if DATA[s_class].get(self.id) is not None:
@@ -103,27 +108,31 @@ class Base():
 
     @classmethod
     def count(cls) -> int:
-        """ Count all objects
+        """
+        count all objects
         """
         s_class = cls.__name__
         return len(DATA[s_class].keys())
 
     @classmethod
     def all(cls) -> Iterable[TypeVar('Base')]:
-        """ Return all objects
+        """
+        return all objects
         """
         return cls.search()
 
     @classmethod
     def get(cls, id: str) -> TypeVar('Base'):
-        """ Return one object by ID
+        """
+        return one object by ID
         """
         s_class = cls.__name__
         return DATA[s_class].get(id)
 
     @classmethod
     def search(cls, attributes: dict = {}) -> List[TypeVar('Base')]:
-        """ Search all objects with matching attributes
+        """
+        search objects
         """
         s_class = cls.__name__
         def _search(obj):
