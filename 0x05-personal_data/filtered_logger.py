@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-0. Regex-ing
+0. Regex-ing + 1. Log formatter
 """
 from typing import List
 import logging
