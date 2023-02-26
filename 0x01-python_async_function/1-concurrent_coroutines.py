@@ -15,8 +15,8 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     returns the 10 random numbers
     """
     ord = [wait_random(max_delay) for x in range(n)]
-    l = []
+    L = []
     for i in asyncio.as_completed(ord):
         r = await i
-        l.append(r)
-    return(l)
+        L.append(r)
+    return(L)
