@@ -2,13 +2,21 @@
 """
 1. Let's execute multiple coroutines at the same time with async
 """
-import asyncio
+
 from typing import List
-async_generator = __import__('0-async_generator').async_generator
+
+import asyncio
+
+wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-async def async_comprehension() -> List[float]:
+async def wait_n(n: int, max_delay: int) -> List[float]:
     """
     returns the 10 random numbers
     """
-    return [i async for i in async_generator()]
+    ord = [wait_random(max_delay) for x in range(n)]
+    l = []
+    for i in asyncio.as_completed(ord):
+        r = await i
+        l.append(r)
+    return(l)
