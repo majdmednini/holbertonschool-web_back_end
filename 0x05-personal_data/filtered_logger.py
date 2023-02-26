@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-0. Regex-ing + 1. Log formatter
+filter_datum returns the log message:
 """
 from typing import List
+import logging
 import re
 import mysql.connector
 import os
-import logging
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -29,7 +29,7 @@ class RedactingFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """
-        random comment
+        todo
         """
         logging.basicConfig(format=self.FORMAT, level=logging.INFO)
         return (self.filter_datum(
@@ -46,7 +46,8 @@ class RedactingFormatter(logging.Formatter):
                      separator: str
                      ) -> str:
         """
-        hide all the personal informations
+        a function that hides all the personal,
+        sensitve informations.
         """
         for field in fields:
             message = re.sub("{}=(.*?){}".format(field, separator),
@@ -57,7 +58,7 @@ class RedactingFormatter(logging.Formatter):
 def get_logger() -> logging.Logger:
 
     """
-        log in
+        get some logging done
     """
     logger = logging.getLogger("user_data")
     stream_handler = logging.StreamHandler()
