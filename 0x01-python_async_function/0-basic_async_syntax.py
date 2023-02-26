@@ -2,15 +2,15 @@
 """
 0. The basics of async
 """
-import random
+
 import asyncio
-from typing import Generator
+import random
 
 
-async def async_generator() -> Generator[float, None, None]:
+async def wait_random(max_delay: int = 10) -> float:
     """
-    wiat for random secs and return arg
+    wait for random secs and return arg
     """
-    for i in range(10):
-        await asyncio.sleep(1)
-        yield random.uniform(0, 10)
+    delay = random.uniform(0, max_delay)
+    await asyncio.sleep(delay)
+    return(delay)
