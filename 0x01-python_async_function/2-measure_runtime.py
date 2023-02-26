@@ -4,17 +4,13 @@
 """
 
 import asyncio
-import time
 
-wait_n = __import__('1-concurrent_coroutines').wait_n
+wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-def measure_time(n: int, max_delay: int) -> float:
+def task_wait_random(max_delay: int) -> asyncio.Task:
     """
-    returns a float
+    return task with asyncio
     """
-    start_time = time.time()
-    asyncio.run(wait_n(n, max_delay))
-    end = time.time() - start_time
-    end /= n
-    return end
+    task = asyncio.create_task(wait_random(max_delay))
+    return task
