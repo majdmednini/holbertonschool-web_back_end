@@ -2,18 +2,16 @@
 """
 0. Writing strings to Redis
 """
-import redis
+from curses import keyname
 import sys
 from typing import Callable, Optional, Union
 import uuid
-from curses import keyname
+import redis
 from functools import wraps
 
 
 def replay(fn):
-    """
-    4. Retrieving lists
-    """
+    """ 4. Retrieving lists """
     store = redis.Redis()
     count_key = fn.__qualname__
     input_key = count_key + ":inputs"
@@ -36,27 +34,21 @@ def count_calls(method: Callable) -> Callable:
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        """
-        mthd to increment the count
-        """
+        """ mthd to increment the count """
         self._redis.incr(key)
         return method(self, *args, **kwargs)
     return wrapper
 
 
 def call_history(method: Callable) -> Callable:
-    """
-    3. Storing lists
-    """
+    """ 3. Storing lists """
     key = method.__qualname__
     input_key = key + ":inputs"
     output_key = key + ":outputs"
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        """
-        mthd to push history in store
-        """
+        """ mthd to push history in store """
         self._redis.rpush(input_key, str(args))
         data = method(self, *args, **kwargs)
         self._redis.rpush(output_key, str(data))
@@ -72,9 +64,11 @@ class Cache():
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
-        store method
+        store mthd
         """
         random_id = str(uuid.uuid4())
         self._redis.set(random_id, data)
@@ -83,7 +77,7 @@ class Cache():
     def get(self, key: str,
             fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
         """
-        get method
+        get mthd
         """
         return fn(self._redis.get(key)) if fn else self._redis.get(key)
 
