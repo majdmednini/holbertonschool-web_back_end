@@ -8,7 +8,5 @@ def list_all(mongo_collection):
     """
     ins docs
     """
-    result = mongo_collection.school.find()
-    if result:
-        return result
-    return []
+    result = mongo_collection.insert_one(kwargs)
+    return new_doc.inserted_id
